@@ -1,4 +1,71 @@
 id	parentId	type	text	options	target	signal
-START	null	start	Good evening...
-A1_OPEN	START	question	How would you describe today...
-...
+START	null	start	Good evening. Let's take a few minutes to reflect on your day.			
+
+A1_OPEN	START	question	How would you describe today in one word?	Productive|Tough|Mixed|Frustrating		
+
+A1_D1	A1_OPEN	decision		answer=Productive|Mixed:A1_Q_HIGH;answer=Tough|Frustrating:A1_Q_LOW		
+
+A1_Q_HIGH	A1_D1	question	When things went well today, what made it happen?	I planned ahead|I adapted quickly|My team helped|It just worked out		
+
+A1_Q_LOW	A1_D1	question	When things didn’t go as planned, what was your first reaction?	Tried to fix what I could|Waited for others|Felt stuck|Pushed through blindly		
+
+A1_D2	A1_Q_HIGH	decision		answer=I planned ahead|I adapted quickly:A1_R_INT;answer=My team helped|It just worked out:A1_R_MIX		
+
+A1_D3	A1_Q_LOW	decision		answer=Tried to fix what I could|Pushed through blindly:A1_R_PARTIAL;answer=Waited for others|Felt stuck:A1_R_EXT		
+
+A1_R_INT	A1_D2	reflection	You took ownership of outcomes today. That shows strong agency — you influenced what happened.			axis1:internal
+
+A1_R_MIX	A1_D2	reflection	Some things worked in your favor, but you also played a role. There’s more control here than it first appears.			axis1:internal
+
+A1_R_PARTIAL	A1_D3	reflection	Even in difficulty, you tried to act. That effort reflects growing control, even if the path wasn’t clear.			axis1:internal
+
+A1_R_EXT	A1_D3	reflection	Today felt shaped by external factors. That’s real — but somewhere in there, you still made choices.			axis1:external
+
+BRIDGE_1_2	A1_R_INT	bridge	Now let’s shift from how things happened — to what you contributed.		A2_OPEN	
+BRIDGE_1_2B	A1_R_EXT	bridge	Now let’s shift from how things happened — to what you contributed.		A2_OPEN	
+BRIDGE_1_2C	A1_R_PARTIAL	bridge	Now let’s shift from how things happened — to what you contributed.		A2_OPEN	
+BRIDGE_1_2D	A1_R_MIX	bridge	Now let’s shift from how things happened — to what you contributed.		A2_OPEN	
+
+A2_OPEN	null	question	Think about one interaction today. What stands out?	I helped someone|I did my work|I needed help|I felt unrecognized		
+
+A2_D1	A2_OPEN	decision		answer=I helped someone:A2_Q_DEEP;answer=I did my work:A2_Q_NEUTRAL;answer=I needed help|I felt unrecognized:A2_Q_ENT		
+
+A2_Q_DEEP	A2_D1	question	What kind of contribution did you make?	Solved someone’s problem|Shared knowledge|Supported emotionally|Took extra effort		
+
+A2_Q_NEUTRAL	A2_D1	question	What best describes your focus today?	Completed tasks|Avoided mistakes|Followed instructions|Stayed consistent		
+
+A2_Q_ENT	A2_D1	question	What frustrated you most?	Lack of support|No recognition|Others underperforming|Unfair expectations		
+
+A2_R_CONTRIB	A2_Q_DEEP	reflection	You contributed beyond your role. These actions build trust and strengthen teams.			axis2:contribution
+
+A2_R_NEUTRAL	A2_Q_NEUTRAL	reflection	You stayed consistent and reliable. Contribution isn’t always visible — but it matters.			axis2:contribution
+
+A2_R_ENT	A2_Q_ENT	reflection	You noticed what wasn’t given to you. That’s valid — but reflection also asks: what did you give?			axis2:entitlement
+
+BRIDGE_2_3	A2_R_CONTRIB	bridge	Let’s zoom out further — beyond actions, to perspective.		A3_OPEN	
+BRIDGE_2_3B	A2_R_NEUTRAL	bridge	Let’s zoom out further — beyond actions, to perspective.		A3_OPEN	
+BRIDGE_2_3C	A2_R_ENT	bridge	Let’s zoom out further — beyond actions, to perspective.		A3_OPEN	
+
+A3_OPEN	null	question	When you think about today’s biggest challenge, who comes to mind first?	Just me|My team|A colleague|Customer/end user		
+
+A3_D1	A3_OPEN	decision		answer=Just me:A3_SELF;answer=My team:A3_TEAM;answer=A colleague:A3_COL;answer=Customer/end user:A3_CUST		
+
+A3_SELF	A3_D1	question	How did it affect you personally?	Stress|Performance|Confidence|Motivation		
+
+A3_TEAM	A3_D1	question	How did it impact your team?	Deadlines|Coordination|Morale|Output		
+
+A3_COL	A3_D1	question	What did you notice about them?	They struggled|They needed help|They were stressed|They stepped up		
+
+A3_CUST	A3_D1	question	What mattered most for them?	Experience|Delivery time|Quality|Trust		
+
+A3_R_SELF	A3_SELF	reflection	Your focus stayed inward today. That’s natural — but widening perspective can reduce pressure.			axis3:self
+
+A3_R_TEAM	A3_TEAM	reflection	You saw the shared impact. Thinking in terms of “we” builds alignment and resilience.			axis3:other
+
+A3_R_COL	A3_COL	reflection	You noticed another person’s experience. That awareness is the start of empathy.			axis3:other
+
+A3_R_CUST	A3_CUST	reflection	You connected your work to real impact. That’s where meaning often comes from.			axis3:other
+
+SUMMARY	A3_R_SELF	summary	Today, you showed {axis1.dominant} control, leaned toward {axis2.dominant}, and focused mostly on {axis3.dominant}. Small shifts tomorrow could change that story.		
+
+END	SUMMARY	end	That’s it for today. See you tomorrow.		
